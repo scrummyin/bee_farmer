@@ -1,0 +1,22 @@
+{% extends 'bees/base_path_node.html' %}
+
+{% block body %}
+    {% if value %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Value:</div>
+        <div class="panel-body">{{value}}</div>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Nodes:</div>
+        <div class="panel-body">
+            <ul>
+                {% for dir in directories %}
+                <li>
+                    <a href="{% url 'bees:browse_node' path|add:dir|add:'/' %}">{{dir}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

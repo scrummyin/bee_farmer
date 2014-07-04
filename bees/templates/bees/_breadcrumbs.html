@@ -1,0 +1,5 @@
+<ol class="breadcrumb">
+    {% for crumb in the_crumbs %}
+        <li>{{ crumb|safe }}</li>
+    {% endfor %}
+</ol>

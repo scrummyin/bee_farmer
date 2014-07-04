@@ -1,0 +1,16 @@
+{% load bootstrap3 %}
+{% load navigation %}
+
+<html>
+    <head>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    </head>
+    <body>
+        <div class="container">
+            {% create_bread_crumb_links %}
+            {% block body %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
