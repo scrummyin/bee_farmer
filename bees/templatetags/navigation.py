@@ -8,7 +8,7 @@ register = template.Library()
 def create_bread_crumb_links(context):
     base_line = '<a href="%s">%s</a>'
     the_crumbs = []
-    partials = filter(bool, context.get('path', '').split('/'))
+    partials = filter(bool, context.get('node_path', '').split('/'))
     base_path = '/'
     the_crumbs.append(base_line % (reverse('bees:browse_node', kwargs={'path': '/'}), 'root:'))
     for node in partials:

@@ -1,0 +1,11 @@
+{% extends 'bees/base_path_node.html' %}
+
+{% load bootstrap3 %}
+
+{% block body %}
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit">
+    </form>
+{% endblock %}
