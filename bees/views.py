@@ -2,7 +2,7 @@ from django.views.generic import TemplateView, FormView
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from kazoo.client import KazooClient
-from bees.forms import CreateNodeForm, EditNodeForm
+from bees.forms import CreateNodeForm, EditNodeForm, DeleteNodeForm
 
 
 class ZookeeperClientMixin(object):
@@ -66,6 +66,25 @@ class DirectoryListingMixin(object):
 
 class BrowseNodeView(DirectoryListingMixin, NodeValueMixin, PathMixin, ZookeeperClientMixin, TemplateView):
     template_name = 'bees/browse_node.html'
+
+
+class DeleteNodeView(PathMixin, ZookeeperClientMixin, FormView):
+    template_name = 'bees/delete_node.html'
+    form_class = DeleteNodeForm
+    _node_value = None
+
+    def get_initial(self):
+        result = super(DeleteNodeView, self).get_initial()
+        result['path'] = self.node_path
+        return result
+
+    def form_valid(self, form):
+        result = super(EditNodeView, self).form_valid(form)
+        self.zk_client.delete(form.cleaned_data.get('path'))
+        return result
+
+    def get_success_url(self):
+        return reverse('bees:browse_node', kwargs={'path': self.node_path})
 
 
 class EditNodeView(NodeValueMixin, PathMixin, ZookeeperClientMixin, FormView):

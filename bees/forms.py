@@ -9,3 +9,6 @@ class CreateNodeForm(forms.Form):
 class EditNodeForm(forms.Form):
     path = forms.CharField(widget=forms.HiddenInput, required=True)
     value = forms.CharField()
+
+class DeleteNodeForm(forms.Form):
+    path = forms.CharField(widget=forms.HiddenInput, required=True)
