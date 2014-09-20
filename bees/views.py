@@ -46,6 +46,7 @@ class NodeValueMixin(object):
         context_data['stats'] = stats
         return context_data
 
+
 class SetActiveViewMixin(object):
     def get_context_data(self, **kwargs):
         context = super(SetActiveViewMixin, self).get_context_data(**kwargs)
@@ -79,12 +80,16 @@ class DeleteNodeView(PathMixin, ZookeeperClientMixin, FormView):
         return result
 
     def form_valid(self, form):
-        result = super(EditNodeView, self).form_valid(form)
+        result = super(DeleteNodeView, self).form_valid(form)
         self.zk_client.delete(form.cleaned_data.get('path'))
         return result
 
+    @property
+    def formated_parent_path(self):
+        return '/' + '/'.join([x for x in self.node_path.split('/') if x][:-1]) + '/'
+
     def get_success_url(self):
-        return reverse('bees:browse_node', kwargs={'path': self.node_path})
+        return reverse('bees:browse_node', kwargs={'path': self.formated_parent_path})
 
 
 class EditNodeView(NodeValueMixin, PathMixin, ZookeeperClientMixin, FormView):
@@ -102,7 +107,6 @@ class EditNodeView(NodeValueMixin, PathMixin, ZookeeperClientMixin, FormView):
         result = super(EditNodeView, self).form_valid(form)
         zk_upload_value = str(form.cleaned_data.get('value'))
         self.zk_client.set(form.cleaned_data.get('path'), zk_upload_value)
-        value = form.cleaned_data.get('value', '')
         return result
 
     def get_success_url(self):
