@@ -8,7 +8,7 @@ To install clone the repo into a directory. Install the requirements in the requ
 
 ## Install Example
 
-This is not the recommend way to run this application, but if you need to get it up and running quickly these lines will get the server running against and will point to localhost as the zookeeper server:
+This is not the recommend way to run this application, but if you need to get it up and running quickly these lines will get the server running and will point to localhost as the zookeeper server:
 
     git clone https://github.com/scrummyin/bee_farmer.git
     pip install -r requirements.txt
