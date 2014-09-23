@@ -20,6 +20,11 @@ class PathMixin(object):
     def node_path(self):
         return self.kwargs.get('path')
 
+    def get_initial(self):
+        result = super(PathMixin, self).get_initial()
+        result['path'] = self.node_path
+        return result
+
     def get_context_data(self, **kwargs):
         context_data = super(PathMixin, self).get_context_data(**kwargs)
         context_data['node_path'] = self.node_path
@@ -28,6 +33,8 @@ class PathMixin(object):
 
 class NodeValueMixin(object):
     """Needs the ZookeeperClientMixin"""
+    _node_value = None
+
     @property
     def node_info(self):
         return self.zk_client.get(self.node_path)
@@ -38,6 +45,11 @@ class NodeValueMixin(object):
             value, stats = self.zk_client.get(self.node_path)
             self._node_value = value
         return self._node_value
+
+    def get_initial(self):
+        result = super(NodeValueMixin, self).get_initial()
+        result['value'] = self.node_value
+        return result
 
     def get_context_data(self, **kwargs):
         context_data = super(NodeValueMixin, self).get_context_data(**kwargs)
@@ -51,7 +63,7 @@ class SetActiveViewMixin(object):
     def get_context_data(self, **kwargs):
         context = super(SetActiveViewMixin, self).get_context_data(**kwargs)
         context['active_nav_menu'] = {
-            self.request.resolver_match.view_name: ' class="pure-menu-selected"'
+            self.request.resolver_match.url_name: ' class="active"'
         }
         return context
 
@@ -65,19 +77,13 @@ class DirectoryListingMixin(object):
         return context_data
 
 
-class BrowseNodeView(DirectoryListingMixin, NodeValueMixin, PathMixin, ZookeeperClientMixin, TemplateView):
+class BrowseNodeView(SetActiveViewMixin, DirectoryListingMixin, NodeValueMixin, PathMixin, ZookeeperClientMixin, TemplateView):
     template_name = 'bees/browse_node.html'
 
 
-class DeleteNodeView(PathMixin, ZookeeperClientMixin, FormView):
+class DeleteNodeView(SetActiveViewMixin, PathMixin, ZookeeperClientMixin, FormView):
     template_name = 'bees/delete_node.html'
     form_class = DeleteNodeForm
-    _node_value = None
-
-    def get_initial(self):
-        result = super(DeleteNodeView, self).get_initial()
-        result['path'] = self.node_path
-        return result
 
     def form_valid(self, form):
         result = super(DeleteNodeView, self).form_valid(form)
@@ -92,16 +98,9 @@ class DeleteNodeView(PathMixin, ZookeeperClientMixin, FormView):
         return reverse('bees:browse_node', kwargs={'path': self.formated_parent_path})
 
 
-class EditNodeView(NodeValueMixin, PathMixin, ZookeeperClientMixin, FormView):
+class EditNodeView(SetActiveViewMixin, NodeValueMixin, PathMixin, ZookeeperClientMixin, FormView):
     template_name = 'bees/edit_node.html'
     form_class = EditNodeForm
-    _node_value = None
-
-    def get_initial(self):
-        result = super(EditNodeView, self).get_initial()
-        result['path'] = self.node_path
-        result['value'] = self.node_value
-        return result
 
     def form_valid(self, form):
         result = super(EditNodeView, self).form_valid(form)
@@ -113,14 +112,9 @@ class EditNodeView(NodeValueMixin, PathMixin, ZookeeperClientMixin, FormView):
         return reverse('bees:browse_node', kwargs={'path': self.node_path})
 
 
-class CreateNodeView(PathMixin, ZookeeperClientMixin, FormView):
+class CreateNodeView(SetActiveViewMixin, PathMixin, ZookeeperClientMixin, FormView):
     template_name = 'bees/create_node.html'
     form_class = CreateNodeForm
-
-    def get_initial(self):
-        result = super(CreateNodeView, self).get_initial()
-        result['path'] = self.node_path
-        return result
 
     def form_valid(self, form):
         result = super(CreateNodeView, self).form_valid(form)

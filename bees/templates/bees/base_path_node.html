@@ -11,10 +11,10 @@
           <div class="col-lg-2 well">
             <ul class="sidebar sidebar-nav nav nav-pills nav-stacked">
               <li class="sidebar-brand">Actions</li>
-              <li{{active_nav_menu.browse_node }}><a href="{% url 'bees:browse_node' node_path %}">Explore</a></li>
-              <li{{active_nav_menu.creat_node }}><a href="{% url 'bees:create_node' node_path %}">Create</a></li>
-              <li{{active_nav_menu.edit_node }}><a href="{% url 'bees:edit_node' node_path %}">Edit</a></li>
-              <li{{active_nav_menu.delete_node }}><a href="{% url 'bees:delete_node' node_path %}">Delete</a></li>
+              <li {{active_nav_menu.browse_node|safe }}><a href="{% url 'bees:browse_node' node_path %}">Explore</a></li>
+              <li {{active_nav_menu.create_node|safe }}><a href="{% url 'bees:create_node' node_path %}">Create</a></li>
+              <li {{active_nav_menu.edit_node|safe }}><a href="{% url 'bees:edit_node' node_path %}">Edit</a></li>
+              <li {{active_nav_menu.delete_node|safe }}><a href="{% url 'bees:delete_node' node_path %}">Delete</a></li>
             </ul>
           </div>
           <div class="col-lg-9">
