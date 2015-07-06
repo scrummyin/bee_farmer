@@ -4,14 +4,15 @@ from django.conf import settings
 from kazoo.client import KazooClient
 from bees.forms import CreateNodeForm, EditNodeForm, DeleteNodeForm
 
+ZK_CLIENT = KazooClient(hosts=settings.ZOOKEEPER_HOSTS)
+ZK_CLIENT.start()
 
 class ZookeeperClientMixin(object):
     @property
     def zk_client(self):
         if hasattr(self, "_zk_client"):
             return self._zk_client
-        self._zk_client = KazooClient(hosts=settings.ZOOKEEPER_HOSTS)
-        self._zk_client.start()
+        self._zk_client = ZK_CLIENT
         return self._zk_client
 
 
